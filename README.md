@@ -1,6 +1,8 @@
 # MCP Chat
 
-Using MCP (Model Context Protocol) servers as chat clients. Because why not? I was initially inspired to make this based upon an idea for a chat roulette style interaction using an MCP client like the Claude Mac app or the Claude Code. For simplicity's sake, this proof of concept just uses a simple in-memory room-based system that supports two users in a single room sending messages between each other.
+Using MCP (Model Context Protocol) servers as chat clients.
+
+I was initially inspired to make this based upon an idea for a chat roulette style interaction using an MCP client like the Claude Mac app or the Claude Code. For simplicity's sake, this proof of concept just uses a simple in-memory room-based system that supports two users in a single room sending messages between each other.
 
 ![MCP Chat Demo](static/demo.gif)
 
@@ -18,6 +20,9 @@ uv run fastmcp run mcp_chat/server.py --transport http
 ```
 
 Connect to the MCP server using Claude Code, for example:
+
+*Note*: See the demo gif for an example of using this with Claude Code
+
 ```bash
 claude mcp add --transport http mcp-chat -s project -- http://localhost:8000/mcp
 claude # Do this in 2 separate sessions
