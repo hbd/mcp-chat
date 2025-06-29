@@ -1,88 +1,53 @@
 # MCP Chat
 
-A fun experiment using MCP (Model Context Protocol) servers as chat clients! This project demonstrates how MCP's tool-calling interface can be repurposed for real-time human-to-human chat.
+Using MCP (Model Context Protocol) servers as chat clients. Because why not? I was initially inspired to make this based upon an idea for a chat roulette style interaction using an MCP client like the Claude Mac app or the Claude Code. For simplicity's sake, this proof of concept just uses a simple in-memory room-based system that supports two users in a single room sending messages between each other.
 
 ![MCP Chat Demo](static/demo.gif)
 
-## What is this?
+## What?
 
-MCP Chat is a proof-of-concept that turns MCP clients into chat applications. Instead of AI assistants calling tools, humans use the same interface to send messages to each other. It's like building a chat app where the "API" is designed for robots, but humans are using it instead!
+MCP is designed for AI assistants to call tools. This project abuses that design to let humans chat with each other through tool calls. A long polling tool is used to wait for messages from the recipient. This is not ideal. Ideally, we'd be using custom notifications, but the MCP clients that I'm working with and most MCP clients today do not support custom messages/notifications.
 
-## Key Features
+## How it works
 
-- **Random matching**: Enter a queue and get matched with another user (like Omegle/ChatRoulette)
-- **Private rooms**: Create or join specific rooms for direct conversations
-- **Long-polling**: Real-time message delivery without WebSocket support
-- **Multiple clients**: Connect from different MCP clients simultaneously
-- **Simple & fun**: No authentication, no persistence, just ephemeral chats
-
-## How It Works
-
-The server exposes MCP tools that clients can call:
-
-1. **`enter_queue`** - Join the matchmaking queue
-2. **`join_room`** - Join a specific room by ID
-3. **`send_message`** - Send a message to your chat partner
-4. **`wait_for_message`** - Wait for incoming messages (long-polling)
-5. **`leave_chat`** - Leave the current conversation
-
-The magic is that `wait_for_message` blocks until a message arrives, enabling real-time chat through the MCP protocol!
-
-## Quick Start
-
+Run the MCP server in using the SHTTP transport:
 ```bash
-# Install dependencies
+# Terminal 1
 uv sync
-
-# Run the server
-uv run python -m mcp_chat.server
-
-# In another terminal, connect with any MCP client
-uv run fastmcp dev http://localhost:8000
-
-# Start chatting!
-call enter_queue {"display_name": "Alice"}
+uv run fastmcp run mcp_chat/server.py --transport http
 ```
 
-## The Fun Part
+Connect to the MCP server using Claude Code, for example:
+```bash
+claude mcp add --transport http mcp-chat -s project -- http://localhost:8000/mcp
+claude # Do this in 2 separate sessions
+```
 
-This project explores an unconventional use of MCP:
-- MCP is designed for AI assistants to use tools
-- But what if humans used those same tools directly?
-- The result: a chat system with a very unique "API"!
+The magic: `wait_for_message` blocks until a message arrives. Real-time chat through long-polling.
 
-It's like using a robot's control panel to have a human conversation. Quirky? Yes. Fun? Absolutely!
+## Tools
 
-## Technical Details
+- `join_room` - Create/join a room
+- `send_message` - Send a message
+- `wait_for_message` - Wait for messages (blocks!)
+- `leave_chat` - Leave the room
 
-- **Language**: Python 3.11+
-- **Framework**: FastMCP
-- **Storage**: In-memory (ephemeral)
-- **Transport**: HTTP with SSE
-- **Concurrency**: asyncio with message queues
+## Requirements
 
-## Limitations
+- Python 3.11+
+- [uv](https://github.com/astral-sh/uv) package manager
 
-- Messages are fire-and-forget (only delivered if someone is waiting)
-- No persistence - everything is lost on server restart
-- No authentication or user accounts
-- Single server instance only
+## Future ideas
 
-## Try It Out!
+- Random pairing (chat roulette style)
+- Custom notifications for async messaging
+- Multi-user rooms
+- Message history
 
-The best way to understand this project is to try it:
-1. Run the server
-2. Open two MCP clients
-3. Have a conversation with yourself (or a friend)!
+## Why?
 
-## Contributing
-
-This is a fun weekend project! Feel free to:
-- Report bugs
-- Suggest features
-- Share your chat experiences
-- Build your own MCP experiments
+Sunday project. Wanted to see if MCP could be bent into a chat protocol. Turns out it can.
 
 ## License
 
-MIT - Do whatever you want with this!
+MIT

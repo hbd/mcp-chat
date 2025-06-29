@@ -27,6 +27,8 @@ build-backend = "hatchling.build"
 [tool.mypy]
 python_version = "3.11"
 strict = true
+# Ignore untyped decorators from FastMCP
+disable_error_code = ["misc"]
 
 [tool.ruff]
 target-version = "py311"

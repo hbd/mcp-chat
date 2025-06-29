@@ -16,12 +16,6 @@ The server will start on `http://localhost:8000`
 
 ## Available Tools
 
-### `enter_queue`
-- **Purpose**: Join the queue to be matched with another user
-- **Parameters**: 
-  - `display_name` (optional): Your display name
-- **Returns**: Queue status or match information with `client_id`
-
 ### `join_room`
 - **Purpose**: Join a specific chat room directly
 - **Parameters**:
@@ -65,7 +59,6 @@ The server will start on `http://localhost:8000`
 
 The server sends these notifications via SSE:
 
-- `chatroom.found`: When you're matched with another user
 - `message.received`: When you receive a message
 - `partner.disconnected`: When your partner leaves or disconnects
 
@@ -80,22 +73,22 @@ uv run python -m mcp_chat.server
 # In another terminal, connect as a client
 uv run fastmcp dev http://localhost:8000
 
-# Enter the queue
-> enter_queue {"display_name": "Alice"}
+# Join a room
+> join_room {"room_id": "my-room", "display_name": "Alice"}
 
-# Send a message (after being matched)
-> send_message {"room_id": "...", "message": "Hello!"}
+# Send a message
+> send_message {"room_id": "my-room", "message": "Hello!", "client_id": "..."}
 
 # Leave the chat
-> leave_chat {"room_id": "..."}
+> leave_chat {"room_id": "my-room", "client_id": "..."}
 ```
 
 ## Current Limitations
 
-1. **Connection ID**: Currently hardcoded as "unknown" - needs proper SSE connection tracking
-2. **Notifications**: Logged but not actually sent via SSE yet
-3. **Persistence**: All data is in-memory and lost on restart
-4. **Single Instance**: No support for distributed/multi-instance deployment
+1. **Notifications**: Logged but not actually sent via SSE yet
+2. **Persistence**: All data is in-memory and lost on restart
+3. **Single Instance**: No support for distributed/multi-instance deployment
+4. **No reconnection**: If you disconnect, you need a new client_id
 
 ## Development
 

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-MCP Chat is a Python-based MCP (Model Context Protocol) server that connects people based on their shared interests. It uses intelligent matching algorithms to facilitate meaningful connections between users.
+MCP Chat is a Python-based MCP (Model Context Protocol) server that enables direct chat between users through MCP tool calls. It demonstrates using MCP's tool-calling interface for real-time human communication.
 
 ## Development Setup
 

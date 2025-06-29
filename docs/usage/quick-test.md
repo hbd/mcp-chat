@@ -18,28 +18,28 @@ uv run fastmcp dev http://localhost:8000
 # See available tools
 tools
 
-# Enter the queue
-call enter_queue {"display_name": "Alice"}
+# Join a room
+call join_room {"room_id": "test-room", "display_name": "Alice"}
 
 # You'll see something like:
-# {"status": "waiting", "position": 1, "queue_length": 1, "client_id": "abc-123-..."}
+# {"status": "room_created", "client_id": "abc-123-...", ...}
 ```
 
-4. **To test matching, open another terminal** (Terminal 3):
+4. **To chat with another person, open another terminal** (Terminal 3):
 ```bash
 uv run fastmcp dev http://localhost:8000
 ```
 
 Then enter:
 ```
-call enter_queue {"display_name": "Bob"}
+call join_room {"room_id": "test-room", "display_name": "Bob"}
 ```
 
-Both clients should now show they're matched!
+Both clients are now in the same room!
 
-5. **Exchange messages using the new long-polling approach**:
+5. **Exchange messages using the long-polling approach**:
 
-In Alice's terminal (use the client_id from enter_queue):
+In Alice's terminal (use the client_id from join_room):
 ```
 # Send a message (replace CLIENT_ID with your actual client_id)
 call send_message {"room_id": "THE_ROOM_ID", "message": "Hello Bob!", "client_id": "YOUR_CLIENT_ID"}
@@ -67,17 +67,17 @@ call leave_chat {"room_id": "THE_ROOM_ID", "client_id": "YOUR_CLIENT_ID"}
 
 ## Important: Client ID System
 
-**NEW**: Each client now gets a unique `client_id` when calling `enter_queue` or `join_room`. You must use this ID in all subsequent calls:
+Each client gets a unique `client_id` when calling `join_room`. You must use this ID in all subsequent calls:
 
-1. Call `enter_queue` or `join_room` and save the `client_id` from the response
+1. Call `join_room` and save the `client_id` from the response
 2. Use that `client_id` in `send_message`, `wait_for_message`, and `leave_chat`
 3. Each client (Claude Code, FastMCP dev, etc.) will get a different ID
 
-This fixes the issue where all clients were seen as the same user!
+This ensures each connection is properly tracked!
 
-## Private Rooms with join_room
+## Creating and Joining Rooms
 
-You can create or join specific rooms:
+You can create or join any room by ID:
 
 ```bash
 # Alice creates a private room
