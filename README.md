@@ -24,6 +24,7 @@ Connect to the MCP server using Claude Code, for example:
 *Note*: See the demo gif for an example of using this with Claude Code
 
 ```bash
+# Terminals 2 & 3
 claude mcp add --transport http mcp-chat -s project -- http://localhost:8000/mcp
 claude # Do this in 2 separate sessions
 ```
