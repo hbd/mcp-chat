@@ -1,6 +1,6 @@
 # MCP Chat
 
-Using MCP (Model Context Protocol) servers as chat clients.
+Using MCP (Model Context Protocol) servers for chat.
 
 I was initially inspired to make this based upon an idea for a chat roulette style interaction using an MCP client like the Claude Mac app or the Claude Code. For simplicity's sake, this proof of concept just uses a simple in-memory room-based system that supports two users in a single room sending messages between each other.
 
